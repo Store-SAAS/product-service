@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import * as compression from 'compression';
+//import * as compression from 'compression';
 
 import { AppModule } from './app.module';
 import { envs } from './config';
@@ -8,10 +9,19 @@ import { envs } from './config';
 async function bootstrap() {
   const logger = new Logger('Main');
 
-  const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('api');
-  app.enableCors();
-  app.use(compression());
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+    AppModule,
+    {
+      transport: Transport.TCP,
+      options: {
+        port: envs.port,
+      },
+    },
+  );
+
+  //app.setGlobalPrefix('api');
+  //app.enableCors();
+  //app.use(compression());
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -19,7 +29,7 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
-  await app.listen(envs.port);
+  await app.listen();
   logger.log(`Products Microservice running on port ${envs.port}`);
 }
 bootstrap();
