@@ -1,4 +1,4 @@
-import { Controller, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Logger, ParseUUIDPipe } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -7,30 +7,37 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 
 @Controller('products')
 export class ProductsController {
-	constructor(private readonly productsService: ProductsService) {}
+	private logger = new Logger('ProductsController');
 
-	@MessagePattern({ cmd: 'createProduct' })
-	createProduct(@Payload() createProductDto: CreateProductDto) {
-		return this.productsService.create(createProductDto);
-	}
+	constructor(private readonly productsService: ProductsService) {}
 
 	@MessagePattern({ cmd: 'getProducts' })
 	getProducts(@Payload() paginationDto: PaginationDto) {
+		this.logger.log(`Retrieving products with ${JSON.stringify(paginationDto)}`);
 		return this.productsService.findAll(paginationDto);
 	}
 
 	@MessagePattern({ cmd: 'getProduct' })
 	getProduct(@Payload('id', ParseUUIDPipe) id: string) {
+		this.logger.log(`Retrieving product with id ${id}`);
 		return this.productsService.findOne(id);
+	}
+
+	@MessagePattern({ cmd: 'createProduct' })
+	createProduct(@Payload() createProductDto: CreateProductDto) {
+		this.logger.log(`Creating product`);
+		return this.productsService.create(createProductDto);
 	}
 
 	@MessagePattern({ cmd: 'updateProduct' })
 	updateProduct(@Payload() updateProductDto: UpdateProductDto) {
+		this.logger.log(`Updating product with id ${updateProductDto.id}`);
 		return this.productsService.update(updateProductDto.id, updateProductDto);
 	}
 
 	@MessagePattern({ cmd: 'deleteProduct' })
 	deleteProduct(@Payload('id', ParseUUIDPipe) id: string) {
+		this.logger.log(`Deleting product with id ${id}`);
 		return this.productsService.remove(id);
 	}
 }
