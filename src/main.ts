@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { Logger, ValidationPipe } from '@nestjs/common';
-//import * as compression from 'compression';
 
 import { AppModule } from './app.module';
 import { envs } from './config';
@@ -15,10 +14,6 @@ async function bootstrap() {
 			port: envs.port,
 		},
 	});
-
-	//app.setGlobalPrefix('api');
-	//app.enableCors();
-	//app.use(compression());
 
 	app.useGlobalPipes(
 		new ValidationPipe({

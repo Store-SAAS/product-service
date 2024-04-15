@@ -9,38 +9,28 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 export class ProductsController {
 	constructor(private readonly productsService: ProductsService) {}
 
-	//@Post()
-	@MessagePattern({ cmd: 'create-product' })
-	//create(@Body() createProductDto: CreateProductDto) {
-	create(@Payload() createProductDto: CreateProductDto) {
+	@MessagePattern({ cmd: 'createProduct' })
+	createProduct(@Payload() createProductDto: CreateProductDto) {
 		return this.productsService.create(createProductDto);
 	}
 
-	//@Get()
-	@MessagePattern({ cmd: 'find-products' })
-	//findAll(@Query() paginationDto: PaginationDto) {
-	findAll(@Payload() paginationDto: PaginationDto) {
+	@MessagePattern({ cmd: 'getProducts' })
+	getProducts(@Payload() paginationDto: PaginationDto) {
 		return this.productsService.findAll(paginationDto);
 	}
 
-	//@Get(':id')
-	@MessagePattern({ cmd: 'find-product' })
-	//findOne(@Param('id', ParseUUIDPipe) id: string) {
-	findOne(@Payload('id', ParseUUIDPipe) id: string) {
+	@MessagePattern({ cmd: 'getProduct' })
+	getProduct(@Payload('id', ParseUUIDPipe) id: string) {
 		return this.productsService.findOne(id);
 	}
 
-	//@Patch(':id')
-	@MessagePattern({ cmd: 'update-product' })
-	//update(@Param('id', ParseUUIDPipe) id: string, @Body() updateProductDto: UpdateProductDto) {
-	update(@Payload() updateProductDto: UpdateProductDto) {
+	@MessagePattern({ cmd: 'updateProduct' })
+	updateProduct(@Payload() updateProductDto: UpdateProductDto) {
 		return this.productsService.update(updateProductDto.id, updateProductDto);
 	}
 
-	//@Delete(':id')
-	@MessagePattern({ cmd: 'remove-product' })
-	remove(@Payload('id', ParseUUIDPipe) id: string) {
-		//remove(@Param('id', ParseUUIDPipe) id: string) {
+	@MessagePattern({ cmd: 'deleteProduct' })
+	deleteProduct(@Payload('id', ParseUUIDPipe) id: string) {
 		return this.productsService.remove(id);
 	}
 }
