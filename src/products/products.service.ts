@@ -15,7 +15,7 @@ export class ProductsService extends PrismaClient implements OnModuleInit {
 		this.logger.log('Database connected');
 	}
 
-	async create(createProductDto: CreateProductDto) {
+	async createProduct(createProductDto: CreateProductDto) {
 		return this.product.create({
 			data: {
 				...createProductDto,
@@ -24,7 +24,7 @@ export class ProductsService extends PrismaClient implements OnModuleInit {
 		});
 	}
 
-	async findAll(paginationDto: PaginationDto) {
+	async getProducts(paginationDto: PaginationDto) {
 		const { page, limit } = paginationDto;
 
 		const totalPages = await this.product.count({ where: { available: true } });
@@ -48,7 +48,7 @@ export class ProductsService extends PrismaClient implements OnModuleInit {
 		};
 	}
 
-	async findOne(id: string) {
+	async getProduct(id: string) {
 		const product = await this.product.findFirst({
 			where: { id, available: true },
 		});
@@ -62,10 +62,10 @@ export class ProductsService extends PrismaClient implements OnModuleInit {
 		return product;
 	}
 
-	async update(id: string, updateProductDto: UpdateProductDto) {
+	async updateProduct(id: string, updateProductDto: UpdateProductDto) {
 		const { id: __, ...data } = updateProductDto;
 
-		await this.findOne(id);
+		await this.getProduct(id);
 
 		return await this.product.update({
 			where: { id },
@@ -73,8 +73,8 @@ export class ProductsService extends PrismaClient implements OnModuleInit {
 		});
 	}
 
-	async remove(id: string) {
-		await this.findOne(id);
+	async deleteProduct(id: string) {
+		await this.getProduct(id);
 
 		return await this.product.update({
 			where: { id },

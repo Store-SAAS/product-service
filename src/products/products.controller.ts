@@ -14,30 +14,30 @@ export class ProductsController {
 	@MessagePattern({ cmd: 'getProducts' })
 	getProducts(@Payload() paginationDto: PaginationDto) {
 		this.logger.log(`Retrieving products with ${JSON.stringify(paginationDto)}`);
-		return this.productsService.findAll(paginationDto);
+		return this.productsService.getProducts(paginationDto);
 	}
 
 	@MessagePattern({ cmd: 'getProduct' })
 	getProduct(@Payload('id', ParseUUIDPipe) id: string) {
 		this.logger.log(`Retrieving product with id ${id}`);
-		return this.productsService.findOne(id);
+		return this.productsService.getProduct(id);
 	}
 
 	@MessagePattern({ cmd: 'createProduct' })
 	createProduct(@Payload() createProductDto: CreateProductDto) {
 		this.logger.log(`Creating product`);
-		return this.productsService.create(createProductDto);
+		return this.productsService.createProduct(createProductDto);
 	}
 
 	@MessagePattern({ cmd: 'updateProduct' })
 	updateProduct(@Payload() updateProductDto: UpdateProductDto) {
 		this.logger.log(`Updating product with id ${updateProductDto.id}`);
-		return this.productsService.update(updateProductDto.id, updateProductDto);
+		return this.productsService.updateProduct(updateProductDto.id, updateProductDto);
 	}
 
 	@MessagePattern({ cmd: 'deleteProduct' })
 	deleteProduct(@Payload('id', ParseUUIDPipe) id: string) {
 		this.logger.log(`Deleting product with id ${id}`);
-		return this.productsService.remove(id);
+		return this.productsService.deleteProduct(id);
 	}
 }
