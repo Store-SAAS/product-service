@@ -40,4 +40,10 @@ export class ProductsController {
 		this.logger.log(`Deleting product with id ${id}`);
 		return this.productsService.deleteProduct(id);
 	}
+
+	@MessagePattern({ cmd: 'validateProducts' })
+	validateProducts(@Payload() ids: string[]) {
+		this.logger.log(`Validating products with ids ${ids}`);
+		return this.productsService.validateProducts(ids);
+	}
 }
